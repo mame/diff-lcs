@@ -10,7 +10,7 @@ class Diff::LCS::Change
   # (no change), '!' (changed), '<' (tail changes from first sequence), or
   # '>' (tail changes from second sequence). The last two ('<>') are only
   # found with Diff::LCS::diff and Diff::LCS::sdiff.
-  VALID_ACTIONS = %w(+ - = ! > <).freeze
+  VALID_ACTIONS = %s(+ - = ! > <).freeze
 
   def self.valid_action?(action)
     VALID_ACTIONS.include? action
@@ -24,8 +24,8 @@ class Diff::LCS::Change
   # Returns the sequence element of the Change.
   attr_reader :element
 
-  def initialize(*args)
-    @action, @position, @element = *args
+  def initialize(action, position, element)
+    @action, @position, @element = action, position, element
 
     fail "Invalid Change Action '#{@action}'" unless Diff::LCS::Change.valid_action?(@action)
     fail 'Invalid Position Type' unless @position.kind_of? IntClass
@@ -111,8 +111,8 @@ class Diff::LCS::ContextChange < Diff::LCS::Change
   # Returns the new element being changed.
   attr_reader :new_element
 
-  def initialize(*args)
-    @action, @old_position, @old_element, @new_position, @new_element = *args
+  def initialize(action, old_position, old_element, new_position, new_element)
+    @action, @old_position, @old_element, @new_position, @new_element = action, old_position, old_element, new_position, new_element
 
     fail "Invalid Change Action '#{@action}'" unless Diff::LCS::Change.valid_action?(@action)
     fail 'Invalid (Old) Position Type' unless @old_position.nil? or @old_position.kind_of? IntClass
